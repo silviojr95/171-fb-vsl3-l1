@@ -42,8 +42,14 @@
             "Janice", "Abigail", "Alice", "Julia", "Judy", "Sophia", "Grace", "Denise", "Amber",
             "Doris", "Marilyn", "Danielle", "Beverly", "Isabella", "Theresa", "Diana", "Natalie",
             "Brittany", "Charlotte", "Marie", "Kayla", "Alexis", "Lori"];
-        var cities = ["London", "Manchester", "Birmingham", "Leeds", "Glasgow",
-            "Liverpool", "Edinburgh", "Bristol", "Cardiff", "Belfast"];
+        var cities = ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix",
+            "Philadelphia", "San Antonio", "San Diego", "Dallas", "Jacksonville",
+            "Austin", "Fort Worth", "Columbus", "Charlotte", "Indianapolis",
+            "San Francisco", "Seattle", "Denver", "Nashville", "Oklahoma City",
+            "Las Vegas", "Louisville", "Baltimore", "Milwaukee", "Albuquerque",
+            "Tucson", "Fresno", "Sacramento", "Mesa", "Kansas City",
+            "Atlanta", "Omaha", "Colorado Springs", "Raleigh", "Miami",
+            "Portland", "Minneapolis", "Tampa", "New Orleans", "Cleveland"];
         var snackbar = document.getElementById('snackbar');
 
         function showNotif() {

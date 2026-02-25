@@ -74,8 +74,8 @@ a {
 }
 
 .product-card.featured {
-    border-color: #b71c2a;
-    box-shadow: 0 4px 24px rgba(183, 28, 42, .18);
+    border-color: #1565C0;
+    box-shadow: 0 4px 24px rgba(21, 101, 192, .22);
 }
 
 .product-supply {

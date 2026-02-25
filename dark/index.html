@@ -51,7 +51,8 @@
     <!-- ===== LIVE BANNER ===== -->
     <div class="live-banner">
         <div class="live-dot"></div>
-        <span>LIVE: <span id="viewer-count">27</span> people are viewing this page &middot; <span id="live-date"></span></span>
+        <span>LIVE: <span id="viewer-count">27</span> people are viewing this page &middot; <span
+                id="live-date"></span></span>
     </div>
 
     <div class="container">
@@ -79,7 +80,7 @@
         <!-- Newspaper banner (always visible) -->
         <div class="banner-img">
             <img src="img/FmoymD2206736.webp" alt="As Seen In" width="750" height="123" loading="lazy">
-            
+
         </div>
 
         <div id="pitch-section" class="smartplayer-scroll-event">
@@ -356,49 +357,39 @@
         })();
     </script>
 
-    <!-- Clickid propagation -->
+    <!-- Clickid propagation (runs on load + when pitch-section is revealed by VTurb) -->
     <script>
         (function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var clickid = urlParams.get('clickid');
+            var clickid = urlParams.get('clickid')
+                || (document.cookie.match('(?:^|; )rtkclickid-store=([^;]*)') || [])[1];
             if (!clickid) return;
 
-            window.addEventListener('DOMContentLoaded', function () {
-                var elements = document.querySelectorAll('a, button');
-                elements.forEach(function (el) {
-                    var isLink = el.tagName.toLowerCase() === 'a';
-                    var attrName = isLink ? 'href' : 'data-href';
-                    var currentHref = el.getAttribute(attrName);
-
-                    if (
-                        !currentHref ||
-                        currentHref.indexOf('clickid=') !== -1 ||
-                        currentHref.indexOf('cid=') !== -1 ||
-                        currentHref.indexOf('click_id=') !== -1 ||
-                        currentHref.indexOf('campaignkey=') !== -1
-                    ) {
-                        return;
-                    }
-
-                    var hasQuery = currentHref.indexOf('?') !== -1;
-                    var anchorIndex = currentHref.indexOf('#');
-                    var anchor = '';
-
-                    if (anchorIndex !== -1) {
-                        anchor = currentHref.substring(anchorIndex);
-                        currentHref = currentHref.substring(0, anchorIndex);
-                    }
-
-                    var newHref = currentHref
-                        + (hasQuery ? '&' : '?')
-                        + 'clickid=' + clickid
-                        + '&cid=' + clickid
-                        + '&click_id=' + clickid
-                        + '&campaignkey=' + clickid
-                        + anchor;
-
-                    el.setAttribute(attrName, newHref);
+            function propagate() {
+                document.querySelectorAll('a[href]').forEach(function (el) {
+                    var href = el.getAttribute('href');
+                    if (!href || href === '#' ||
+                        href.indexOf('clickid=') !== -1 ||
+                        href.indexOf('cid=') !== -1) return;
+                    var sep = href.indexOf('?') !== -1 ? '&' : '?';
+                    el.setAttribute('href', href + sep +
+                        'clickid=' + encodeURIComponent(clickid) +
+                        '&cid=' + encodeURIComponent(clickid) +
+                        '&click_id=' + encodeURIComponent(clickid) +
+                        '&campaignkey=' + encodeURIComponent(clickid));
                 });
+            }
+
+            // Run immediately for anything visible on load
+            document.addEventListener('DOMContentLoaded', propagate);
+
+            // Also run whenever #pitch-section changes visibility (VTurb reveal)
+            document.addEventListener('DOMContentLoaded', function () {
+                var pitchEl = document.getElementById('pitch-section');
+                if (pitchEl) {
+                    new MutationObserver(function () { propagate(); })
+                        .observe(pitchEl, { attributes: true, attributeFilter: ['style', 'class'] });
+                }
             });
         })();
     </script>
